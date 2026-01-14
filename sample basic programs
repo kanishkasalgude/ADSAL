@@ -73,26 +73,41 @@ public class Main {
         System.out.printf("\nSum = " + a * (a + 1) / 2);
 
         System.out.printf("\n\nREVERSE THE GIVEN NUMBER\nEnter the number :");
-        a = scanner.nextFloat();
-        String n = String.valueOf(a);
-        String rev = "";
-        for (int i = 0; i < n.length(); i++) {
-            rev = i + rev;
+        int normal = scanner.nextInt();
+        int reversed = 0;
+        while(normal != 0){
+            reversed = reversed*10 + (normal%10);
+            normal = normal/10;
         }
-        System.out.printf("Reversed number = " + rev);
+
+        System.out.printf("Reversed number = " + reversed);
 
         System.out.printf("\n\nCHECK PALINDROME\nEnter the number :");
-        a = scanner.nextFloat();
-        String first = String.valueOf(a);
-        String r = "";
-        for (int i = 0; i < n.length(); i++) {
-            r = i + r;
+        normal = scanner.nextInt();
+        int tr = normal;
+        reversed = 0;
+        while(normal != 0){
+            reversed = reversed*10 + (normal%10);
+            normal = normal/10;
         }
-        if (first == r) System.out.printf("\nIt is palindrome!\n");
+        if (tr == reversed) System.out.printf("\nIt is palindrome!\n");
         else System.out.printf("\nIt is not a palindrome!\n");
 
         System.out.printf("\n\nCHECK PRIME\nEnter the number :");
         a = scanner.nextFloat();
+        boolean flag = true;
+        if(a <= 1){
+            flag = false;
+        }
+        if(a % 2 == 0 || a % 3 == 0) flag = false;
+        for(int i = 5; i*i <a; i+= 6){
+            if(a % i == 0 || a % (i+2) == 0) flag = false;
+        }
+
+        if(flag == true){
+            System.out.println("\nThe number is a prime number.");
+        }
+        else System.out.println("\nThe number is not prime");
 
 
         System.out.printf("\n\nFIND FACTORIAL\nEnter number :");
@@ -104,15 +119,39 @@ public class Main {
         System.out.printf("\nfactorial is " + factorial);
 
         System.out.printf("\n\nFIBONACCI SERIES\nEnter n :");
-        a = scanner.nextFloat();
-        float prev = 0;
-        float t = 1;
-        System.out.printf(prev + " ");
-        for(int i=0; i<a-2; i++){
-            System.out.printf(t + " ");
+        int m = scanner.nextInt();
+        int[] arr = new int[m];
+        int prev = 0;
+        int t = 1;
+        arr[0] = 0;
+        if(m>1) arr[1] = 1;
+        System.out.printf("Series : " + prev + " "+ t + " ");
+        for(int i=2; i<m; i++){
             t = t+prev;
             prev = t - prev;
+            arr[i] = t;
+            System.out.printf(t + " ");
         }
+
+        System.out.printf("\n\nCOUNT DIGITS IN GIVEN NUMBER\nEnter the number :");
+        long num = scanner.nextLong();
+        long tem = num;
+        int count = 0;
+        while( tem != 0){
+            count++;
+            tem = tem / 10;
+        }
+        System.out.printf("\nThe number of digits are " + count);
+
+        System.out.printf("\n\nSUM OF DIGITS OF GIVEN NUMBER\nEnter the number :");
+        num = scanner.nextLong();
+        tem = num;
+        long sum = 0;
+        while(tem != 0){
+            sum += tem % 10;
+            tem = tem / 10;
+        }
+        System.out.printf("\nThe sum of the digits is "+sum);
         scanner.close();
 
     }
