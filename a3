@@ -1,0 +1,398 @@
+/*
+NAME: Kanishka Kishor Salgude
+ROLL NO: 23343
+BATCH: G11
+PROBLEM STATEMENT:
+Consider a binary tree and implement an In-order Threaded Binary Tree.
+Perform the following operations:
+• Create an In-order Threaded Binary Tree
+• Traverse the tree using In-order traversal
+• Traverse the tree using Pre-order traversal
+ */
+import java.util.Scanner;
+
+class TBTnode
+{
+    int value;
+    TBTnode left;
+    TBTnode right;
+    Boolean leftThread;
+    Boolean rightThread;
+
+    TBTnode(int data){
+        value = data;
+        left = right = null;
+        leftThread = rightThread = true;
+    }
+}
+
+class threadedBinaryTree
+{
+    Scanner sc = new Scanner(System.in);
+    private TBTnode head;
+
+    threadedBinaryTree(){
+        head = new TBTnode(-1);   // dummy head node
+        head.left = head;
+        head.right = head;
+        head.leftThread = true;
+        head.rightThread = false;
+    }
+
+    public void create_root(int key){
+        if(head.leftThread != true){
+            System.out.println("Root already exists!");
+            return;
+        }
+        TBTnode root = new TBTnode(key);
+        root.left = head;
+        root.right = head;
+        head.left = root;
+        head.leftThread = false;
+        System.out.println("Root created successfully!");
+    }
+
+    public void insert(int key) {
+        TBTnode newNode = new TBTnode(key);
+
+        // Case 1: Empty tree
+        if (head.leftThread == true) {
+            create_root(key);
+            return;
+        }
+
+        TBTnode current = head.left;
+        int choice = 0;
+
+        while (true) {
+            System.out.printf("In which side do ou want to insert?" +
+                    "\n1.Left" +
+                    "\n2.Right" +
+                    "\nenter choice :");
+            choice = sc.nextInt();
+            // LEFT CASE
+            if (choice == 1) {
+                if (!current.leftThread) {
+                    current = current.left;
+                    System.out.println("Current node = "+ current.value);
+                } else {
+                    // Insert as left child
+                    newNode.left = current.left;
+                    newNode.right = current;
+
+                    current.leftThread = false;
+                    current.left = newNode;
+                    System.out.println("Node inserted successfully!");
+                    return;
+                }
+            }
+            // RIGHT CASE
+            else if(choice == 2){
+                if (!current.rightThread) {
+                    current = current.right;
+                    System.out.println("Current node = "+ current.value);
+                } else {
+                    // Insert as right child
+                    newNode.left = current;
+                    newNode.right = current.right;
+
+                    current.rightThread = false;
+                    current.right = newNode;
+                    System.out.println("Node inserted successfully!");
+                    return;
+                }
+            }else{
+                System.out.println("Error :Enter valid choice!!");
+            }
+        }
+    }
+
+
+    public void inorder(){
+        if(head.leftThread == true){
+            System.out.println("The tree is empty!");
+            return;
+        }
+
+        TBTnode ptr = leftmostNode(head.left);
+        while(ptr != head){
+            System.out.printf(ptr.value + " ");
+            if(ptr.rightThread == true){
+                ptr  =ptr.right;
+            }
+            else{
+                ptr = leftmostNode(ptr.right);
+            }
+        }
+        System.out.println("\n");
+
+    }
+
+    public TBTnode leftmostNode(TBTnode root){
+        TBTnode current = root;
+        while(!current.leftThread){
+            current=current.left;
+        }
+        return current;
+    }
+
+    void preorder()
+    {
+        if(head.leftThread == true){
+            System.out.println("No tree found!");
+            return;
+        }
+        TBTnode ptr = head.left;
+        while(ptr != head){
+            System.out.printf(ptr.value + " ");
+            if(ptr.leftThread == false){
+                ptr = ptr.left;
+            }else{
+                while(ptr.rightThread && ptr.right !=head){
+                    ptr = ptr.right;
+                }
+                ptr = ptr.right;
+            }
+        }
+        System.out.println("\n");
+    }
+}
+
+public class Main
+{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        threadedBinaryTree tbt = new threadedBinaryTree();
+
+        int choice;
+
+        do{
+            System.out.println("\n---OPERATIONS OF TBT---\n");
+            System.out.printf(
+                            "1.Create root"+
+                            "\n2.Insert" +
+                            "\n3.In-order traversal" +
+                            "\n4.Pre-order traversal" +
+                            "\n5.Exit" +
+                            "\nENTER CHOICE :");
+            choice = sc.nextInt();
+
+            switch(choice){
+                case 1:
+                    int key;
+                    System.out.printf("\nEnter the value of root :");
+                    key = sc.nextInt();
+                    tbt.create_root(key);
+                    break;
+
+                case 2:
+                    System.out.printf("\nEnter the key to be inserted :");
+                    key = sc.nextInt();
+                    tbt.insert(key);
+                    break;
+
+                case 3:
+                    System.out.printf("\nThe  Inorder traversal is :");
+                    tbt.inorder();
+                    break;
+
+                case 4:
+                    System.out.printf("\nThe Preorder traversal is :");
+                    tbt.preorder();
+                    break;
+
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Enter a valid choice!");
+            }
+        }while(choice != 5);
+    }
+}
+
+/*
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :1
+
+Enter the value of root :10
+Root created successfully!
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :1
+
+Enter the value of root :20
+Root already exists!
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :2
+
+Enter the key to be inserted :5
+In which side do ou want to insert?
+1.Left
+2.Right
+enter choice :1
+Node inserted successfully!
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :2
+
+Enter the key to be inserted :3
+In which side do ou want to insert?
+1.Left
+2.Right
+enter choice :1
+Current node = 5
+In which side do ou want to insert?
+1.Left
+2.Right
+enter choice :1
+Node inserted successfully!
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :2
+
+Enter the key to be inserted :7
+In which side do ou want to insert?
+1.Left
+2.Right
+enter choice :1
+Current node = 5
+In which side do ou want to insert?
+1.Left
+2.Right
+enter choice :3
+Error :Enter valid choice!!
+In which side do ou want to insert?
+1.Left
+2.Right
+enter choice :2
+Node inserted successfully!
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :2
+
+Enter the key to be inserted :12
+In which side do ou want to insert?
+1.Left
+2.Right
+enter choice :2
+Node inserted successfully!
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :1
+
+Enter the value of root :12
+Root already exists!
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :2
+
+Enter the key to be inserted :15
+In which side do ou want to insert?
+1.Left
+2.Right
+enter choice :2
+Current node = 12
+In which side do ou want to insert?
+1.Left
+2.Right
+enter choice :1
+Node inserted successfully!
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :3
+
+The  Inorder traversal is :3 5 7 10 15 12
+
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :4
+
+The Preorder traversal is :10 5 3 7 12 15
+
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :6
+Enter a valid choice!
+
+---OPERATIONS OF TBT---
+
+1.Create root
+2.Insert
+3.In-order traversal
+4.Pre-order traversal
+5.Exit
+ENTER CHOICE :5
+Exiting...
+
+Process finished with exit code 0
+
+ */
