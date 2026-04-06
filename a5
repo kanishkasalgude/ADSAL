@@ -1,0 +1,196 @@
+/*ASSIGNMENT 5
+Name : Kanishka Kishor Salgude
+Roll no :23343
+Batch :G11
+PROBLEM STATEMENT:
+Represent a graph of your college campus using adjacency list/adjacency matrix. Nodes
+should represent the various departments/institutes and links should represent the distance
+between them. Find the minimum spanning tree using a) Kruskal’s algorithm. B) Prim’s
+algorithm.
+Analyze the above two algorithms for space and time complexity
+*/
+import java.util.*;
+
+class PrimsMST {
+    static final int V = 6;
+
+    int minKey(int key[], boolean mstSet[]) {
+        int min = Integer.MAX_VALUE, minIndex = -1;
+
+        for (int v = 0; v < V; v++)
+            if (!mstSet[v] && key[v] < min) {
+                min = key[v];
+                minIndex = v;
+            }
+        return minIndex;
+    }
+
+    void primMST(int graph[][]) {
+        int parent[] = new int[V];
+        int key[] = new int[V];
+        boolean mstSet[] = new boolean[V];
+
+        Arrays.fill(key, Integer.MAX_VALUE);
+        key[0] = 0;
+        parent[0] = -1;
+
+        for (int count = 0; count < V - 1; count++) {
+            int u = minKey(key, mstSet);
+            mstSet[u] = true;
+
+            for (int v = 0; v < V; v++)
+                if (graph[u][v] != 0 && !mstSet[v] && graph[u][v] < key[v]) {
+                    parent[v] = u;
+                    key[v] = graph[u][v];
+                }
+        }
+
+        System.out.println("Edge \t Weight");
+        int total = 0;
+        for (int i = 1; i < V; i++) {
+            System.out.println(parent[i] + " - " + i + "\t" + graph[i][parent[i]]);
+            total += graph[i][parent[i]];
+        }
+        System.out.println("Total Cost: " + total);
+    }
+
+    public static void main(String[] args) {
+        PrimsMST t = new PrimsMST();
+        int graph[][] = {
+                {0, 2, 0, 6, 0, 0},
+                {2, 0, 3, 8, 5, 0},
+                {0, 3, 0, 0, 7, 0},
+                {6, 8, 0, 0, 9, 0},
+                {0, 5, 7, 9, 0, 4},
+                {0, 0, 0, 0, 4, 0}
+        };
+        t.primMST(graph);
+    }
+}
+
+class Edge implements Comparable<Edge> {
+    int src, dest, weight;
+
+    public int compareTo(Edge e) {
+        return this.weight - e.weight;
+    }
+}
+
+class KruskalMST {
+    int V, E;
+    Edge edges[];
+
+    KruskalMST(int v, int e) {
+        V = v;
+        E = e;
+        edges = new Edge[E];
+        for (int i = 0; i < e; i++)
+            edges[i] = new Edge();
+    }
+
+    int find(int parent[], int i) {
+        if (parent[i] == i)
+            return i;
+        return find(parent, parent[i]);
+    }
+
+    void union(int parent[], int x, int y) {
+        int xset = find(parent, x);
+        int yset = find(parent, y);
+        parent[yset] = xset;
+    }
+
+    void kruskalMST() {
+        Arrays.sort(edges);
+        int parent[] = new int[V];
+
+        for (int i = 0; i < V; i++)
+            parent[i] = i;
+
+        int count = 0, i = 0;
+        int total = 0;
+
+        while (count < V - 1) {
+            Edge next = edges[i++];
+            int x = find(parent, next.src);
+            int y = find(parent, next.dest);
+
+            if (x != y) {
+                System.out.println(next.src + " - " + next.dest + " : " + next.weight);
+                total += next.weight;
+                union(parent, x, y);
+                count++;
+            }
+        }
+        System.out.println("Total Cost: " + total);
+    }
+
+    public static void main(String[] args) {
+        int V = 6, E = 8;
+        KruskalMST g = new KruskalMST(V, E);
+
+        g.edges[0] = new Edge(); g.edges[0].src=0; g.edges[0].dest=1; g.edges[0].weight=2;
+        g.edges[1] = new Edge(); g.edges[1].src=1; g.edges[1].dest=2; g.edges[1].weight=3;
+        g.edges[2] = new Edge(); g.edges[2].src=0; g.edges[2].dest=3; g.edges[2].weight=6;
+        g.edges[3] = new Edge(); g.edges[3].src=1; g.edges[3].dest=3; g.edges[3].weight=8;
+        g.edges[4] = new Edge(); g.edges[4].src=1; g.edges[4].dest=4; g.edges[4].weight=5;
+        g.edges[5] = new Edge(); g.edges[5].src=2; g.edges[5].dest=4; g.edges[5].weight=7;
+        g.edges[6] = new Edge(); g.edges[6].src=3; g.edges[6].dest=4; g.edges[6].weight=9;
+        g.edges[7] = new Edge(); g.edges[7].src=4; g.edges[7].dest=5; g.edges[7].weight=4;
+
+        g.kruskalMST();
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        PrimsMST p = new PrimsMST();
+
+        int graph[][] = {
+                {0, 2, 0, 6, 0, 0},
+                {2, 0, 3, 8, 5, 0},
+                {0, 3, 0, 0, 7, 0},
+                {6, 8, 0, 0, 9, 0},
+                {0, 5, 7, 9, 0, 4},
+                {0, 0, 0, 0, 4, 0}
+        };
+        int choice =0;
+        do{
+            System.out.printf("===OPERATIONS===" +
+                    "\n1.Prims Algorithm" +
+                    "\n2,Kruskals Algorithm" +
+                    "\n3.Exit" +
+                    "\nEnter your choice :");
+            choice = sc.nextInt();
+            switch(choice){
+                case 1:
+                    p.primMST(graph);
+                    break;
+
+                case 2:
+                    int V = 6, E = 8;
+                    KruskalMST g = new KruskalMST(V, E);
+                    g.edges[0].src=0; g.edges[0].dest=1; g.edges[0].weight=2;
+                    g.edges[1].src=1; g.edges[1].dest=2; g.edges[1].weight=3;
+                    g.edges[2].src=0; g.edges[2].dest=3; g.edges[2].weight=6;
+                    g.edges[3].src=1; g.edges[3].dest=3; g.edges[3].weight=8;
+                    g.edges[4].src=1; g.edges[4].dest=4; g.edges[4].weight=5;
+                    g.edges[5].src=2; g.edges[5].dest=4; g.edges[5].weight=7;
+                    g.edges[6].src=3; g.edges[6].dest=4; g.edges[6].weight=9;
+                    g.edges[7].src=4; g.edges[7].dest=5; g.edges[7].weight=4;
+                    g.kruskalMST();
+                    break;
+
+                case 3:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Enter valid choice!");
+            }
+        }while(choice != 3);
+
+    }
+}
