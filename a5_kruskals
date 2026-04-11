@@ -1,0 +1,74 @@
+import java.util.*;
+public class Main{
+    static int V = 6;
+
+    static class Edge{
+        int u, v, w;
+        Edge(int u, int v, int w){
+            this.u = u;
+            this.v = v;
+            this.w = w;
+        }
+    }
+
+    static int find(int x, int[] parent){
+        if(parent[x] != x){
+            parent[x] = find(parent[x], parent);
+        }
+        return parent[x];
+    }
+
+    static void union(int x, int y, int[] parent){
+        parent[find(y, parent)] = find(x,parent);
+    }
+
+    static void kruskals(int[][] graph){
+        List<Edge> edges = new ArrayList<>();
+
+        //Step 1: convert graph to list
+        for(int i = 0; i<V; i++){
+            for(int j = i+1; j<V;j++){
+                if(graph[i][j] != 0){
+                    edges.add(new Edge(i,j,graph[i][j]));
+                }
+            }
+        }
+
+        //Step 2: sort edges
+        edges.sort((a,b) -> a.w - b.w);
+
+        //Step 3:Initialize sets
+        int[] parent = new int[V];
+        for(int i=0; i<V;i++){
+            parent[i] = i;
+        }
+        int mincost = 0;
+        int count = 0;
+        System.out.println("Edges \tCost");
+        for(Edge e:edges){
+            if(find(e.u, parent) != find(e.v, parent)){
+                union(e.u, e.v, parent);
+                System.out.println(e.u + " - " + e.v +"\t" + e.w);
+                mincost += e.w;
+                count++;
+                if(count == V-1) break;
+            }
+        }
+
+        //Step 6: total cost
+        System.out.println("Total cost : "+mincost);
+
+    }
+
+    public static void main(String[] args){
+        int[][] graph = {
+                {0, 2, 0, 6, 0, 0},
+                {2, 0, 3, 8, 5, 0},
+                {0, 3, 0, 0, 7, 0},
+                {6, 8, 0, 0, 9, 4},
+                {0, 5, 7, 9, 0, 1},
+                {0, 0, 0, 4, 1, 0}
+        };
+        kruskals(graph);
+    }
+}
