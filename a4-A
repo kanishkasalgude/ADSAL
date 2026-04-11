@@ -1,7 +1,19 @@
+/*
+Name : Kanishka Kishor Salgude
+Roll No : 23343
+Batch : G-11
+
+Assignment Number 4-A
+
+Problem Statement : A city transportation department is developing a navigation system to help users find
+efficient routes between different locations. Represent the city map as a graph, having node
+as each location (place) and Each road connecting two locations is an edge. Explore
+possible routes using Depth-First Search (DFS) and Breadth-First Search (BFS).
+*/
+
 import java.util.*;
 
-public class GraphTraversal {
-
+public class Main {
     static HashMap<Integer, ArrayList<Integer>> adj = new HashMap<>();
     static HashMap<Integer, Boolean> visited = new HashMap<>();
 
@@ -16,19 +28,18 @@ public class GraphTraversal {
     static void dfs(int node) {
         visited.put(node, true);
         System.out.print(node + " ");
-        for (int n : adj.get(node)) {
+        for (int n : adj.keySet()) {
             if (!visited.getOrDefault(n, false)) {
                 dfs(n);
             }
         }
     }
 
-    //breadth first traversal.
+    //breadth first search
     static void bfs(int node) {
         Queue<Integer> q = new LinkedList<>();
         q.add(node);
         visited.put(node, true);
-
         while (!q.isEmpty()) {
             int temp = q.poll();
             System.out.print(temp + " ");
@@ -40,18 +51,16 @@ public class GraphTraversal {
             }
         }
     }
-    public static void main(String[] args) {
 
+    //main function
+    public static void main(String[] args) {
         addEdge(1, 2);
         addEdge(1, 3);
         addEdge(2, 4);
         addEdge(3, 5);
-
         dfs(1);
-
         visited.clear();
         System.out.println();
-
         bfs(1);
     }
 }
