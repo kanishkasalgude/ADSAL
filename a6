@@ -1,0 +1,87 @@
+/*
+Name: Kanishka Kishor Salgude
+Roll no: 23343
+Batch: G11
+
+ASSIGNMENT NO 6
+Problem Statement: Represent a graph of the city using an adjacency matrix /adjacency list. Nodes should
+represent the various landmarks and links should represent the distance between them. Find
+the shortest path using Dijkstra's algorithm from single source to all destinations. Analyse the
+implemented algorithm for space and time complexity.
+ */
+import java.util.*;
+public class Dijkstras{
+    static int V = 5;
+
+    //function to find vertex with minimum distance
+    static int min_distance(int[] dist, boolean visited[]){
+        Integer min = Integer.MAX_VALUE, minIndex = -1;
+        for(int i=0;i<V;i++){
+            if(!visited[i] && dist[i]<min){
+                min = dist[i];
+                minIndex = i;
+            }
+        }
+        return minIndex;
+    }
+
+    //function to implement dijkstras algorithm
+    static void dijkstras(int[][] graph, int src){
+        int[] dist = new int[V];
+        boolean[] visited = new boolean[V];
+
+        //initialise the arrays
+        for(int i=0; i<V;i++){
+            dist[i] = Integer.MAX_VALUE;
+            visited[i] = false;
+        }
+
+        dist[src] = 0;
+
+        //process all vertices
+        for(int count = 0; count<V-1; count++){
+            int u = min_distance(dist,visited);
+            visited[u] = true;
+            for(int v = 0; v<V;v++){
+                if(!visited[v] &&
+                graph[u][v]!=0 &&
+                dist[u] != Integer.MAX_VALUE &&
+                dist[u] + graph[u][v] < dist[v]){
+                    dist[v] = dist[u] + graph[u][v];
+                }
+            }
+        }
+
+        //print all the distances
+        print(dist);
+    }
+
+    //print all the distances
+    static void print(int[] dist){
+        System.out.println("vertex \tDistance from source");
+        for(int i=0;i<V;i++){
+            System.out.println(i+"\t\t"+dist[i]);
+        }
+    }
+
+    public static void main(String[] args){
+        int graph[][] = {
+                {0, 10, 0, 30, 100},
+                {10, 0, 50, 0, 0},
+                {0, 50, 0, 20, 10},
+                {30, 0, 20, 0, 60},
+                {100, 0, 10, 60, 0}
+        };
+
+        Dijkstras obj = new Dijkstras();
+        obj.dijkstras(graph,0); //source vertex : 0
+    }
+}
+/*
+vertex 	Distance from source
+0		0
+1		10
+2		50
+3		30
+4		60
+*/
