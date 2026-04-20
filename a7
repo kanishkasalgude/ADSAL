@@ -71,14 +71,46 @@ class KMP
 
     //main function
     public static void main(String[] args){
-        String s = "abcabcabcabc";
-        String pattern = "abc";
-        kmp_algo(s, pattern);
+        Scanner sc= new Scanner(System.in);
+        String s;
+        String pattern;
+        int choice;
+        do{
+            System.out.print("Operations---\n1.Find pattern\n2.Exit\nEnter choice : ");
+            choice = sc.nextInt();
+            sc.nextLine();
+            switch(choice){
+                case 1:
+                    System.out.println("Enter the text : ");
+                    s = sc.nextLine();
+                    System.out.println("Enter the pattern : ");
+                    pattern = sc.nextLine();
+                    kmp_algo(s, pattern);
+                    break;
+                    
+                case 2:
+                    System.out.println("Exiting...");
+            }
+        }while(choice != 2);
+        
     }
 }
 /*
+Operations---
+1.Find pattern
+2.Exit
+Enter choice : 1
+Enter the text : 
+abcababcabc
+Enter the pattern : 
+abc
 Pattern found at index : 0
-Pattern found at index : 3
-Pattern found at index : 6
-Pattern found at index : 9
+Pattern found at index : 5
+Pattern found at index : 8
+Operations---
+1.Find pattern
+2.Exit
+Enter choice : 2
+Exiting...
+
  */
